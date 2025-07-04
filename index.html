@@ -57,14 +57,22 @@
         <a-marker type="hiro" id="main-marker">
             
             <!-- Simple Bulb -->
-            <a-sphere 
-                id="bulb"
-                position="0 0.5 0" 
-                radius="0.3"
-                material="color: yellow; emissive: #332200;" 
-                gesture-handler
-                bulb-component>
-            </a-sphere>
+        <a-sphere 
+            id="bulb"
+            position="0 1 0" 
+            radius="0.5"
+            material="color: yellow; emissive: #ffff00;" 
+            gesture-handler
+            bulb-component>
+        </a-sphere>
+
+        <a-box 
+            position="0 0.5 0" 
+            scale="0.2 0.2 0.2"
+            material="color: red;" 
+            gesture-handler
+            bulb-component>
+        </a-box>
             
             <!-- Simple Text -->
             <a-text 
