@@ -56,31 +56,38 @@
         <!-- Marker -->
         <a-marker type="hiro" id="main-marker">
             
-            <!-- Simple Bulb -->
-        <a-sphere 
-            id="bulb"
-            position="0 1 0" 
-            radius="0.5"
-            material="color: yellow; emissive: #ffff00;" 
-            gesture-handler
-            bulb-component>
-        </a-sphere>
-
-        <a-box 
-            position="0 0.5 0" 
-            scale="0.2 0.2 0.2"
-            material="color: red;" 
-            gesture-handler
-            bulb-component>
-        </a-box>
-            
-            <!-- Simple Text -->
+            <!-- Large visible test objects -->
             <a-text 
-                value="Click the bulb!" 
-                position="0 1 0" 
+                value="AR WORKS!" 
+                position="0 2 0" 
                 align="center"
-                color="white">
+                color="red"
+                scale="2 2 2">
             </a-text>
+            
+            <a-box 
+                position="0 1 0" 
+                scale="0.5 0.5 0.5"
+                material="color: red;" 
+                rotation="45 45 45"
+                animation="property: rotation; to: 0 360 0; loop: true; dur: 2000">
+            </a-box>
+            
+            <a-sphere 
+                id="bulb"
+                position="1 1 0" 
+                radius="0.3"
+                material="color: yellow; emissive: #ffff00;" 
+                gesture-handler
+                bulb-component>
+            </a-sphere>
+            
+            <a-cylinder 
+                position="-1 1 0" 
+                radius="0.2" 
+                height="0.8"
+                material="color: blue;">
+            </a-cylinder>
             
         </a-marker>
         
