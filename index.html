@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AR Physics Lab - Basic</title>
+    <script src="https://aframe.io/releases/1.4.0/aframe.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/AR-js-org/AR.js/aframe/build/aframe-ar.min.js"></script>
+    <style>
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+        }
+        .ui-panel {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            background: rgba(0, 0, 0, 0.8);
+            color: white;
+            padding: 15px;
+            border-radius: 10px;
+            z-index: 999;
+            max-width: 250px;
+        }
+        button {
+            background: #4CAF50;
+            color: white;
+            border: none;
+            padding: 8px 12px;
+            border-radius: 5px;
+            margin: 3px;
+            cursor: pointer;
+        }
+        .status {
+            color: #FFD700;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <!-- AR Scene -->
+    <a-scene 
+        embedded 
+        arjs="sourceType: webcam; debugUIEnabled: false; detectionMode: mono_and_matrix; matrixCodeType: 3x3;"
+        vr-mode-ui="enabled: false"
+        gesture-detector>
+        
+        <!-- AR Camera -->
+        <a-camera 
+            gps-camera 
+            rotation-reader
+            look-controls="enabled: false"
+            arjs-look-controls="smoothingFactor: 0.1">
+        </a-camera>
+        
+        <!-- Marker -->
+        <a-marker type="pattern" url="assets/marker.patt" id="main-marker">
+            
+            <!-- Simple Bulb -->
+            <a-sphere 
+                id="bulb"
+                position="0 0.5 0" 
+                radius="0.3"
+                material="color: yellow; emissive: #332200;" 
+                gesture-handler
+                bulb-component>
+            </a-sphere>
+            
+            <!-- Simple Text -->
+            <a-text 
+                value="Click the bulb!" 
+                position="0 1 0" 
+                align="center"
+                color="white">
+            </a-text>
+            
+        </a-marker>
+        
+    </a-scene>
+    
+    <!-- UI Panel -->
+    <div class="ui-panel">
+        <h3>AR Physics Lab</h3>
+        <p>Status: <span id="status" class="status">Loading...</span></p>
+        <p>Bulb: <span id="bulb-status">OFF</span></p>
+        <button onclick="toggleBulbManually()">Toggle Bulb</button>
+    </div>
+    
+    <script>
+        // Simple bulb component
+        AFRAME.registerComponent('bulb-component', {
+            init: function () {
+                this.isOn = false;
+                this.el.addEventListener('click', this.toggleBulb.bind(this));
+            },
+            
+            toggleBulb: function () {
+                this.isOn = !this.isOn;
+                
+                if (this.isOn) {
+                    // Bulb ON
+                    this.el.setAttribute('material', {
+                        color: 'yellow',
+                        emissive: '#ffff00'
+                    });
+                    document.getElementById('bulb-status').textContent = 'ON';
+                    updateStatus('Bulb is ON - Glowing bright!');
+                } else {
+                    // Bulb OFF
+                    this.el.setAttribute('material', {
+                        color: '#666666',
+                        emissive: '#000000'
+                    });
+                    document.getElementById('bulb-status').textContent = 'OFF';
+                    updateStatus('Bulb is OFF');
+                }
+                
+                console.log('Bulb toggled:', this.isOn ? 'ON' : 'OFF');
+            }
+        });
+        
+        // Gesture handling for mobile
+        AFRAME.registerComponent('gesture-detector', {
+            init: function () {
+                this.targetElement = this.el;
+                this.internalState = { 
+                    previousState: null 
+                };
+                
+                this.emitGestureEvent = this.emitGestureEvent.bind(this);
+                this.targetElement.addEventListener("touchstart", this.emitGestureEvent);
+                this.targetElement.addEventListener("touchend", this.emitGestureEvent);
+                this.targetElement.addEventListener("touchmove", this.emitGestureEvent);
+            },
+            
+            emitGestureEvent(event) {
+                this.targetElement.emit(event.type, event);
+            }
+        });
+        
+        AFRAME.registerComponent('gesture-handler', {
+            init: function () {
+                this.el.addEventListener('touchstart', this.onTouchStart.bind(this));
+            },
+            
+            onTouchStart: function (event) {
+                console.log('Touch detected on bulb');
+                this.el.emit('click');
+            }
+        });
+        
+        // Initialize
+        let arReady = false;
+        
+        window.addEventListener('load', function() {
+            const marker = document.querySelector('#main-marker');
+            
+            marker.addEventListener('markerFound', function() {
+                console.log('Marker found!');
+                updateStatus('Marker detected - Try clicking the bulb!');
+                arReady = true;
+            });
+            
+            marker.addEventListener('markerLost', function() {
+                console.log('Marker lost!');
+                updateStatus('Marker lost - Point camera at marker');
+                arReady = false;
+            });
+            
+            updateStatus('Point camera at printed marker');
+        });
+        
+        function updateStatus(message) {
+            document.getElementById('status').textContent = message;
+            console.log('Status:', message);
+        }
+        
+        function toggleBulbManually() {
+            const bulb = document.querySelector('#bulb');
+            if (bulb) {
+                bulb.components['bulb-component'].toggleBulb();
+            }
+        }
+    </script>
+</body>
+</html>

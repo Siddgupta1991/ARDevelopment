@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>AR Marker - Print This</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 20px;
+            font-family: Arial, sans-serif;
+            text-align: center;
+        }
+        .marker-container {
+            display: inline-block;
+            border: 2px solid #000;
+            padding: 10px;
+            margin: 20px;
+            background: white;
+        }
+        .marker {
+            width: 200px;
+            height: 200px;
+            border: 20px solid #000;
+            display: grid;
+            grid-template-columns: repeat(10, 1fr);
+            grid-template-rows: repeat(10, 1fr);
+            background: white;
+        }
+        .cell {
+            background: white;
+        }
+        .cell.black {
+            background: black;
+        }
+        .instructions {
+            max-width: 600px;
+            margin: 0 auto;
+            text-align: left;
+            background: #f0f0f0;
+            padding: 20px;
+            border-radius: 10px;
+            margin-top: 20px;
+        }
+        @media print {
+            .instructions {
+                display: none;
+            }
+        }
+    </style>
+</head>
+<body>
+    <h1>AR Physics Lab - Marker</h1>
+    
+    <div class="marker-container">
+        <div class="marker" id="marker"></div>
+        <p><strong>Print this marker and place it on your table</strong></p>
+    </div>
+    
+    <div class="instructions">
+        <h2>Instructions:</h2>
+        <ol>
+            <li><strong>Print this page</strong> - Make sure the marker is about 8cm x 8cm in size</li>
+            <li><strong>Cut out the marker</strong> and place it on a flat surface</li>
+            <li><strong>Open the AR app</strong> on your phone</li>
+            <li><strong>Point your phone camera</strong> at the marker</li>
+            <li><strong>Keep the marker well-lit</strong> and avoid shadows</li>
+            <li><strong>Hold the phone steady</strong> about 20-30cm above the marker</li>
+        </ol>
+        <p><em>Note: The black border is essential for detection. Don't cut it off!</em></p>
+    </div>
+
+    <script>
+        // Generate the marker pattern
+        const marker = document.getElementById('marker');
+        
+        // Simple pattern - you can modify this
+        const pattern = [
+            [0,0,0,0,0,0,0,0,0,0],
+            [0,1,1,1,1,1,1,1,1,0],
+            [0,1,0,0,0,0,0,0,1,0],
+            [0,1,0,1,1,1,1,0,1,0],
+            [0,1,0,1,0,0,1,0,1,0],
+            [0,1,0,1,0,0,1,0,1,0],
+            [0,1,0,1,1,1,1,0,1,0],
+            [0,1,0,0,0,0,0,0,1,0],
+            [0,1,1,1,1,1,1,1,1,0],
+            [0,0,0,0,0,0,0,0,0,0]
+        ];
+        
+        for (let i = 0; i < 10; i++) {
+            for (let j = 0; j < 10; j++) {
+                const cell = document.createElement('div');
+                cell.className = pattern[i][j] === 0 ? 'cell black' : 'cell';
+                marker.appendChild(cell);
+            }
+        }
+    </script>
+</body>
+</html>
